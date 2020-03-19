@@ -22,8 +22,9 @@ function handleLoad() {
             for (let person of persons) {
                 let option = document.createElement("option");
                 select.appendChild(option);
-                option.setAttribute("value", `${count}`);
-                option.innerHTML = person.name;
+                option.setAttribute("value", `${count}`);// kies hier i.p.v. een extra teller voor person.id als value
+                //option.innerHTML = person.name; //innerHTML wordt op het examen fout gerekend
+                option.appendChild(document.createTextNode(person.name));
                 count++;
             }
         })
@@ -42,11 +43,11 @@ function handleGetFriends() {
     let selectionValue = document.getElementById("select_person");
     let name = selectionValue[selectionValue.selectedIndex].text;
     console.log("Controle log/ naam: " + name); // kan zowel name als id gebruiken voor de eerste fetch te doen
-
+    //kies voor id als je zeker wil zijn dat je maar 1 persoon krijgt, name is niet uniek. Daarom is het beter om bij options als value het id te gebruiken, dan heb je dat hier
     let url = 'http://localhost:3000/persons/';
     let output = document.getElementById("output");
     makeElementEmpty(output);
-    fetch(url + "?name=" + name)
+    fetch(url + "?name=" + name)//fetch dus met id doen
         .then((response) => {
             if (response.ok) {
                 return response.json();
@@ -55,12 +56,12 @@ function handleGetFriends() {
             }
         })
         .then((data) => {
-            let person = data[0];
+            let person = data[0]; //als je meerdere personen met zelfde naam hebt is dit niet goed.
             let friends = person.friends;
             console.log("Controle log/ friends id: " + friends);
             let search = "";
             for (let friend of friends) {
-                search += "?id=" + friend;
+                search += "?id=" + friend;//vorm: "?id=2&id=3": bekijk eens de mogelijkheden van de join functie of probeer hier een juiste string op te bouwen
             }
             console.log("Controle log/ searchstring: " + search);
             return fetch(url + search);
@@ -76,7 +77,7 @@ function handleGetFriends() {
             let outputFriends = "";
 
             for (let person of friends) {
-                outputFriends += `${name} heeft vriend(en) ${person.name}`;
+                outputFriends += `${name} heeft vriend(en) ${person.name}`; // dit anders oplossen, nu krijg je "sofie heeft vriend(en) timsofie heeft vriend(en) geert"
             }
             output.appendChild(document.createTextNode(outputFriends));
         })
@@ -102,12 +103,12 @@ function handlePostPerson() {
     })
         .then((response) => {
             if (response.ok) {
-                return response.json();
+                return response.json(); //hier doe je niets mee, was misschien leuk om die ook te tonen met zijn id
             } else {
                 throw `error: ${response.status}`;
             }
         })
-
+        //dus hier .then .....
         .catch((error) => {
             output.appendChild(document.createTextNode(error));
         })
