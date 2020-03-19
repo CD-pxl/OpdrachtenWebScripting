@@ -84,7 +84,7 @@ function handleGetName() {
             //output.innerText = `${name}`;
             console.log(person);
             let data = [];
-            data.push([person[0].id, person[0].name]);
+            data.push([person[0].id, person[0].name]);//je hebt hier begrepen dat je een array terug krijgt, maar misschien zijn er nog personen met dezelfde naam, dus best in een lus 
             let table = makeTable(data);
             output.appendChild(table);
         })
@@ -146,7 +146,7 @@ function handlePutPerson() {
             }
         })
         .then((response) => {
-            if (response.status == 200) {
+            if (response.status == 200) { //response kan ook 201 zijn.
                 return response.json();
             } else {
                 throw `error with status ${response.status}`;
